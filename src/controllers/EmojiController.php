@@ -40,11 +40,11 @@ class EmojiController
         return json_encode(Emoji::getAll());
     }
 
-    public static function findEmoji(Slim $app, $id)
+    public static function findEmoji(Slim $app, $position)
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
-        $obj = Emoji::find($id);
+        $obj = Emoji::find($position);
 
         return $obj->result;
     }
@@ -54,8 +54,17 @@ class EmojiController
 
     // }
 
-    // public static function deleteEmoji()
-    // {
+    public static function deleteEmoji(Slim $app, $position)
+    {
+        $app->response->headers->set('Content-Type', 'application/json');
 
-    // }
+        $rows = Emoji::destroy($position);
+
+        if($rows > 0) {
+            return json_encode("Emoji $position deletion successful.");
+        }
+        else {
+            return json_encode("Emoji $position deletion failed!");
+        }
+    }
 }

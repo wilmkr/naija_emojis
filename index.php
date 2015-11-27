@@ -41,8 +41,8 @@ $app->get('/emojis', function () use ($app) {
 /**
  *  Get a single emoji
  */
-$app->get('/emojis/:id', function ($id) use ($app) {
-    echo EmojiController::findEmoji($app, $id);
+$app->get('/emojis/:pos', function ($position) use ($app) {
+    echo EmojiController::findEmoji($app, $position);
 });
 
 // $app->put('/emojis/{id}', function () {
@@ -53,9 +53,12 @@ $app->get('/emojis/:id', function ($id) use ($app) {
 //     echo "partialy updates an emoji";
 // });
 
-// $app->delete('/emojis/{id}', function () {
-//     echo "deletes an emoji";
-// });
+/**
+ *  Delete an emoji
+ */
+$app->delete('/emojis/:pos', function ($position) use ($app) {
+    echo EmojiController::deleteEmoji($app, $position);
+});
 
 // Run the Slim application
 $app->run();
