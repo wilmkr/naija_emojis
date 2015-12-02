@@ -16,10 +16,16 @@ $app->post('/register', function () use ($app) {
     echo UserController::register($app);
 });
 
-// $app->post('/auth/login', function () {
-//     echo "login";
-// });
+/**
+ *  Login a user
+ */
+$app->post('/auth/login', function () use ($app) {
+    echo UserController::login($app);
+});
 
+/**
+ *  Logout a user
+ */
 // $app->get('/auth/logout', function () {
 //     echo "logout";
 // });
