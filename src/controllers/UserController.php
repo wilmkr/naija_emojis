@@ -6,6 +6,7 @@ use PDO;
 use Slim\Slim;
 use Firebase\JWT\JWT;
 use Wilson\Source\Models\User;
+use Wilson\Source\Configuration;
 
 class UserController
 {
@@ -60,8 +61,8 @@ class UserController
                     ]
                 ];
 
-                //$secretKey = base64_decode($config->get('jwtKey'));
-                $secretKey = "12345";
+                Configuration::load();
+                $secretKey = getenv('JWT_KEY');
 
                 $jwt = JWT::encode($token, $secretKey);
 
