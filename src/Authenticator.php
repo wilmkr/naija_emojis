@@ -5,6 +5,7 @@ namespace Wilson\Source;
 use Exception;
 use Slim\Slim;
 use Firebase\JWT\JWT;
+use Wilson\Source\Authenticator;
 use Firebase\JWT\ExpiredException;
 
 class Authenticator

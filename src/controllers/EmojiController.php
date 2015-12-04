@@ -10,27 +10,36 @@ class EmojiController
 {
     public static function createEmoji(Slim $app)
     {
+        $app->response->headers->set('Content-Type', 'application/json');
+
         try {
-            $app->response->headers->set('Content-Type', 'application/json');
+            $auth = Authenticator::authenticate($app);
+            $auth = json_decode($auth);
 
-            $emoji = new Emoji();
+            if(is_object($auth)) {
 
-            $emoji->name = $app->request->params('name');
-            $emoji->emoji_char = $app->request->params('emoji_char');
-            $emoji->category = $app->request->params('category');
-            $emoji->created_by = $app->request->params('created_by');
+                $emoji = new Emoji();
 
-            $rows = $emoji->save();
+                $emoji->name = $app->request->params('name');
+                $emoji->emoji_char = $app->request->params('emoji_char');
+                $emoji->category = $app->request->params('category');
+                $emoji->created_by = $app->request->params('created_by');
 
-            if($rows > 0) {
-                return json_encode("Emoji creation successful.");
+                $rows = $emoji->save();
+
+                if($rows > 0) {
+                    $app->halt(201, json_encode("Emoji creation successful."));
+                }
+                else {
+                    throw new Exception("Emoji creation failed!");
+                }
             }
             else {
-                return json_encode("Emoji creation failed!");
+                $app->halt(401, json_encode("You're not authorized to perform this action. Please login."));
             }
         }
         catch(Exception $e) {
-            return $e->getMessage();
+            $app->halt(400, json_encode($e->getMessage()));
         }
     }
 
@@ -38,16 +47,30 @@ class EmojiController
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
-        return json_encode(Emoji::getAll());
+        $returnedValue = Emoji::getAll());
+
+        if(is_array($returnedValue)) {
+            return json_encode($returnedValue);
+        }
+
+        if(is_string($returnedValue)) {
+            $app->halt(204, json_encode($returnedValue));
+        }
     }
 
     public static function findEmoji(Slim $app, $position)
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
-        $obj = Emoji::find($position);
+        $returnedValue = Emoji::find($position);
 
-        return $obj->result;
+        if(is_object($returnedValue)) {
+            return $returnedValue->result;
+        }
+
+        if(is_string($returnedValue)) {
+            $app->halt(404, json_encode($returnedValue));
+        }
     }
 
     // public static function updateEmoji()
@@ -59,13 +82,21 @@ class EmojiController
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
-        $rows = Emoji::destroy($position);
+        $auth = Authenticator::authenticate($app);
+        $auth = json_decode($auth);
 
-        if($rows > 0) {
-            return json_encode("Emoji $position deletion successful.");
+        if(is_object($auth)) {
+            $rows = Emoji::destroy($position);
+
+            if($rows > 0) {
+                return json_encode("Emoji $position deletion successful.");
+            }
+            else {
+                return json_encode("Emoji $position deletion failed!");
+            }
         }
         else {
-            return json_encode("Emoji $position deletion failed!");
+            $app->halt(401, json_encode("You're not authorized to perform this action. Please login."));
         }
     }
 }

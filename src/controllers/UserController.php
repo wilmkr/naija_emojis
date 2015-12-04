@@ -94,9 +94,9 @@ class UserController
     public static function logout(Slim $app)
     {
         $auth = Authenticator::authenticate($app);
-        $auth = json_decode($auth, true);
+        $auth = json_decode($auth);
 
-        if(is_array($auth)) {
+        if(is_object($auth)) {
             return json_encode("You've logged out successfully.");
         }
     }
