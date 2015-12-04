@@ -4,6 +4,7 @@ namespace Wilson\Source\Controllers;
 
 use PDO;
 use Slim\Slim;
+use Exception;
 use Firebase\JWT\JWT;
 use Wilson\Source\Models\User;
 use Wilson\Source\Authenticator;
@@ -11,11 +12,15 @@ use Wilson\Source\Configuration;
 
 class UserController
 {
+    /**
+     *  This function creates a new instance of a user
+     * @param  Slim   $app
+     */
     public static function register(Slim $app)
     {
-        try {
-            $app->response->headers->set('Content-Type', 'application/json');
+        $app->response->headers->set('Content-Type', 'application/json');
 
+        try {
             $user = new User();
 
             $user->username = $app->request->params('username');
@@ -25,17 +30,22 @@ class UserController
             $rows = $user->save();
 
             if($rows > 0) {
-                return json_encode("User registration successful.");
+                $app->halt(201, json_encode("User registration successful."));
             }
             else {
-                return json_encode("User registration failed!");
+                throw new Exception("User registration failed!");
             }
         }
         catch(Exception $e) {
-            return $e->getMessage();
+            $app->halt(400, json_encode($e->getMessage()));
         }
     }
 
+    /**
+     *  This function logs in users by checking their login credentials against the database
+     *  and generates a json web token (JWT) for valid users
+     * @param  Slim   $app [description]
+     */
     public static function login(Slim $app)
     {
         $app->response->headers->set('Content-Type', 'application/json');
@@ -69,14 +79,18 @@ class UserController
                 return json_encode($jwt);
             }
             else {
-                return json_encode("Login failed. Username or password is invalid.");
+                $app->halt(404, json_encode("Login failed. Username or password is invalid."));
             }
         }
         catch(Exception $e) {
-            return $e->getMessage();
+            $app->halt(400, json_encode($e->getMessage()));
         }
     }
 
+    /**
+     *  A simple logout function
+     * @param  Slim   $app
+     */
     public static function logout(Slim $app)
     {
         $auth = Authenticator::authenticate($app);
