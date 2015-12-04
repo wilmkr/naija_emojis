@@ -26,9 +26,9 @@ $app->post('/auth/login', function () use ($app) {
 /**
  *  Logout a user
  */
-// $app->get('/auth/logout', function () {
-//     echo "logout";
-// });
+$app->get('/auth/logout', function () use ($app) {
+   echo UserController::logout($app);
+});
 
 /**
  *  Create an emoji

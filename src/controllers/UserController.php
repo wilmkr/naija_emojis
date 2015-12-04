@@ -6,6 +6,7 @@ use PDO;
 use Slim\Slim;
 use Firebase\JWT\JWT;
 use Wilson\Source\Models\User;
+use Wilson\Source\Authenticator;
 use Wilson\Source\Configuration;
 
 class UserController
@@ -51,13 +52,12 @@ class UserController
 
             if($password === $result['password'])
             {
-                // generate token
                 $token = [
                     'iat'  => time(),
-                    'exp'  => time() + 300,
+                    'exp'  => time() + 1800,
                     'data' => [
-                        'userId'   => $result['user_id'],
-                        'username' => $username,
+                        'userID'   => $result['user_id'],
+                        'username' => $username
                     ]
                 ];
 
@@ -66,21 +66,19 @@ class UserController
 
                 $jwt = JWT::encode($token, $secretKey);
 
-                // $unencodedArray = ['jwt' => $jwt];
-                // echo json_encode($unencodedArray);
-                //
-                echo $jwt;
+                return json_encode($jwt);
             }
-
-            return json_encode($result);
+            else {
+                return json_encode("Login failed. Username or password is invalid.");
+            }
         }
         catch(Exception $e) {
             return $e->getMessage();
         }
     }
 
-    // public static function logout(Slim $app)
-    // {
-
-    // }
+    public static function logout(Slim $app)
+    {
+        Authenticator::authenticate($app);
+    }
 }

@@ -4,6 +4,7 @@ namespace Wilson\Source\Controllers;
 
 use Slim\Slim;
 use Wilson\Source\Models\Emoji;
+use Wilson\Source\Authenticator;
 
 class EmojiController
 {
