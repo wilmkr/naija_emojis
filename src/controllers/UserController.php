@@ -38,13 +38,13 @@ class UserController
 
     public static function login(Slim $app)
     {
+        $app->response->headers->set('Content-Type', 'application/json');
+
+        $username = $app->request->params('username');
+        $password = $app->request->params('password');
+
         try
         {
-            $app->response->headers->set('Content-Type', 'application/json');
-
-            $username = $app->request->params('username');
-            $password = $app->request->params('password');
-
             $conn = User::getConnection();
             $sql = "SELECT * FROM users WHERE username='$username'";
             $stmt = $conn->query($sql);
@@ -79,6 +79,11 @@ class UserController
 
     public static function logout(Slim $app)
     {
-        Authenticator::authenticate($app);
+        $auth = Authenticator::authenticate($app);
+        $auth = json_decode($auth, true);
+
+        if(is_array($auth)) {
+            return json_encode("You've logged out successfully.");
+        }
     }
 }
