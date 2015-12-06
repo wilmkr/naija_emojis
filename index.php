@@ -4,7 +4,6 @@ require 'vendor/autoload.php';
 
 use Slim\Slim;
 use Wilson\Source\Controllers\UserController;
-use Wilson\Source\Controllers\AuthController;
 use Wilson\Source\Controllers\EmojiController;
 
 $app = new Slim(['debug' => true]);

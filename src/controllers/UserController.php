@@ -88,7 +88,7 @@ class UserController
     }
 
     /**
-     *  A simple logout function
+     * A simple logout function
      * @param  Slim   $app
      */
     public static function logout(Slim $app)

@@ -8,6 +8,10 @@ use Wilson\Source\Authenticator;
 
 class EmojiController
 {
+    /**
+     * This method creates an instance of an emoji and stores it in the database.
+     * @param  Slim   $app      [Slim instance]
+     */
     public static function createEmoji(Slim $app)
     {
         $app->response->headers->set('Content-Type', 'application/json');
@@ -43,6 +47,11 @@ class EmojiController
         }
     }
 
+    /**
+     * This method fetches all the emojis in the database
+     * @param  Slim   $app      [Slim instance]
+     * @return json encoded string
+     */
     public static function getAllEmojis(Slim $app)
     {
         $app->response->headers->set('Content-Type', 'application/json');
@@ -58,6 +67,12 @@ class EmojiController
         }
     }
 
+    /**
+     * This method is used to search for a particular emoji
+     * @param  Slim   $app      [Slim instance]
+     * @param  $position        [position of the emoji in the emojis table]
+     * @return json encoded string
+     */
     public static function findEmoji(Slim $app, $position)
     {
         $app->response->headers->set('Content-Type', 'application/json');
@@ -73,11 +88,26 @@ class EmojiController
         }
     }
 
-    // public static function updateEmoji()
+    // public static function updateEmoji(Slim $app, $position)
     // {
-
+            // $emoji = Emoji::find($position);
+            // $emoji->name = "Dipo Murray";
+            // $user->save();
     // }
 
+    // public static function patchEmoji(Slim $app, $position)
+    // {
+            // $emoji = Emoji::find($position);
+            // $emoji->name = "Dipo Murray";
+            // $user->save();
+    // }
+
+    /**
+     * This method is used to delete an emoji from the database
+     * @param  Slim   $app      [Slim instance]
+     * @param  $position        [position of the emoji in the emojis table]
+     * @return json encoded string
+     */
     public static function deleteEmoji(Slim $app, $position)
     {
         $app->response->headers->set('Content-Type', 'application/json');
