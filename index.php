@@ -54,9 +54,9 @@ $app->get('/emojis/:pos', function ($position) use ($app) {
 //     echo "updates an emoji";
 // });
 
-// $app->patch('/emojis/{id}', function () {
-//     echo "partialy updates an emoji";
-// });
+$app->patch('/emojis/:pos', function ($position) use ($app) {
+   echo EmojiController::patchEmoji($app, $position);
+});
 
 /**
  *  Delete an emoji
