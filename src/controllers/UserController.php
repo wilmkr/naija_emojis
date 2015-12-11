@@ -64,7 +64,7 @@ class UserController
             {
                 $token = [
                     'iat'  => time(),
-                    'exp'  => time() + 1800,
+                    'exp'  => time() + 3600,
                     'data' => [
                         'userID'   => $result['user_id'],
                         'username' => $username

@@ -8,59 +8,47 @@ use Wilson\Source\Controllers\EmojiController;
 
 $app = new Slim(['debug' => true]);
 
-/**
- *  Create a new user
- */
+// Create a new user
 $app->post('/register', function () use ($app) {
     echo UserController::register($app);
 });
 
-/**
- *  Login a user
- */
+// Login a user
 $app->post('/auth/login', function () use ($app) {
     echo UserController::login($app);
 });
 
-/**
- *  Logout a user
- */
+// Logout a user
 $app->get('/auth/logout', function () use ($app) {
    echo UserController::logout($app);
 });
 
-/**
- *  Create an emoji
- */
+// Create an emoji
 $app->post('/emojis', function () use ($app) {
     echo EmojiController::createEmoji($app);
 });
 
-/**
- * Show all emojis;
- */
+// Show all emojis;
 $app->get('/emojis', function () use ($app) {
     echo EmojiController::getAllEmojis($app);
 });
 
-/**
- *  Get a single emoji
- */
+// Get a single emoji
 $app->get('/emojis/:pos', function ($position) use ($app) {
     echo EmojiController::findEmoji($app, $position);
 });
 
-// $app->put('/emojis/{id}', function () {
-//     echo "updates an emoji";
-// });
-
+// Partially update an emoji
 $app->patch('/emojis/:pos', function ($position) use ($app) {
    echo EmojiController::patchEmoji($app, $position);
 });
 
-/**
- *  Delete an emoji
- */
+// Fully update an emoji
+$app->put('/emojis/:pos', function ($position) use ($app) {
+    echo EmojiController::updateEmoji($app, $position);
+});
+
+// Delete an emoji
 $app->delete('/emojis/:pos', function ($position) use ($app) {
     echo EmojiController::deleteEmoji($app, $position);
 });

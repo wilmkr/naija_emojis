@@ -2,6 +2,7 @@
 
 namespace Wilson\Source\Controllers;
 
+use Exception;
 use Slim\Slim;
 use Wilson\Source\Models\Emoji;
 use Wilson\Source\Authenticator;
@@ -88,17 +89,62 @@ class EmojiController
         }
     }
 
-    // public static function updateEmoji(Slim $app, $position)
-    // {
-            // $emoji = Emoji::find($position);
-            // $emoji->name = "Dipo Murray";
-            // $user->save();
-    // }
+    /**
+     * This function fully updates an emoji in the database i.e. updates all fields of an emoji record
+     * @param  Slim   $app      [Slim instance]
+     * @param  $position        [the position of the emoji in the emojis table]
+     */
+    public static function updateEmoji(Slim $app, $position)
+    {
+        $app->response->headers->set('Content-Type', 'application/json');
+
+        $auth = Authenticator::authenticate($app);
+        $auth = json_decode($auth);
+
+        if(is_object($auth))
+        {
+            $emoji = Emoji::find($position);
+
+            $emoji->name = self::checkParamValue($app, "name", $app->request->params('name'));
+            $emoji->emoji_char = self::checkParamValue($app, "emoji_char", $app->request->params('emoji_char'));
+            $emoji->category = self::checkParamValue($app, "category", $app->request->params('category'));
+            $emoji->keywords = self::checkParamValue($app, "keywords", $app->request->params('keywords'));
+            $emoji->created_by = self::checkParamValue($app, "created_by", $app->request->params('created_by'));
+
+            $rows = $emoji->save();
+
+            if($rows > 0) {
+                $app->halt(200, json_encode("Emoji successfully updated."));
+            }
+            else {
+                $app->halt(401, json_encode("Emoji full update failed!"));
+            }
+        }
+    }
+
+    /**
+     * This function checks if a parameter contained in a request has a valid value
+     * @param  Slim   $app   [Slim instance]
+     * @param  $param [the parameter to check]
+     * @return string
+     */
+    public static function checkParamValue(Slim $app, $param, $value)
+    {
+        $app->response->headers->set('Content-Type', 'application/json');
+        echo "value: $value";
+
+        if(is_null($value) || empty($value)) {
+           $app->halt(401, json_encode("Cannot update. Missing or invalid parameter: $param"));
+        }
+        else {
+            return $value;
+        }
+    }
 
     /**
      * This function updates some fields of an empji record in the database
      * @param  Slim   $app      [Slim instance]
-     * @param  [type] $position [the position of the emoji in the emojis table]
+     * @param  $position        [the position of the emoji in the emojis table]
      */
     public static function patchEmoji(Slim $app, $position)
     {
@@ -121,14 +167,14 @@ class EmojiController
                 $rows = $emoji->save();
 
                 if($rows > 0) {
-                    $app->halt(201, json_encode("Emoji successfully updated."));
+                    $app->halt(200, json_encode("Emoji successfully updated."));
                 }
                 else {
-                    throw new Exception("Emoji update failed!");
+                    throw new Exception("Emoji partial update failed!");
                 }
             }
             catch(Exception $e) {
-                $app->halt(400, json_encode($e->getMessage()));
+                $app->halt(401, json_encode($e->getMessage()));
             }
         }
     }
