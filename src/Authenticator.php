@@ -11,7 +11,7 @@ use Firebase\JWT\ExpiredException;
 class Authenticator
 {
     /**
-     *  This function authenticates users before they can be granted access to protected endpoints.
+     * This function authenticates users before they can be granted access to protected endpoints.
      * @param  Slim   $app
      */
     public static function authenticate(Slim $app)
