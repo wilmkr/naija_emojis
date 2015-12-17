@@ -19,6 +19,9 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
         $this->token = json_decode($response->getBody());
     }
 
+    /**
+     * Test if a user can actually be registered or not
+     */
     public function testRegister()
     {
         $response = $this->client->post('/register', [
@@ -35,16 +38,20 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test login module, and that a token is actually returned upon successful user login
+     */
     public function testLogin()
     {
         $response = $this->client->post('/auth/login', ['query' => ['username' => 'Wil', 'password' => 'password']]);
 
-        $returnedValue = json_decode($response->getBody());
-
-        $this->assertInternalType('string', $returnedValue);
+        $this->assertInternalType('string', json_decode($response->getBody()));
         $this->assertEquals('200', $response->getStatusCode());
     }
 
+    /**
+     * Test logout functionality
+     */
     public function testLogout()
     {
         $response = $this->client->get('/auth/logout', ['headers' => ['Authorization' => $this->token]]);
