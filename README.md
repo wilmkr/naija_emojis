@@ -16,7 +16,6 @@ $ composer require Wilson/naija-emoji
 ## Usage
 
 
-
 ## Testing
 
 If the  folder containing your test classes is "tests"
