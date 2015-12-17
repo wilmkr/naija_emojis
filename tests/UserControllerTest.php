@@ -35,13 +35,23 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    // public function testLogin()
-    // {
+    public function testLogin()
+    {
+        $response = $this->client->post('/auth/login', ['query' => ['username' => 'Wil', 'password' => 'password']]);
 
-    // }
+        $returnedValue = json_decode($response->getBody());
 
-    // public function testLogout()
-    // {
+        $this->assertInternalType('string', $returnedValue);
+        $this->assertEquals('200', $response->getStatusCode());
+    }
 
-    // }
+    public function testLogout()
+    {
+        $response = $this->client->get('/auth/logout', ['headers' => ['Authorization' => $this->token]]);
+
+        $expected = "You've logged out successfully.";
+        $actual = json_decode($response->getBody());
+
+        $this->assertEquals($expected, $actual);
+    }
 }
