@@ -19,6 +19,9 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         $this->token = json_decode($response->getBody());
     }
 
+    /**
+     * Test if an emoji can actually be created
+     */
     public function testCreateEmoji()
     {
         $response = $this->client->post('/emojis', [
@@ -41,6 +44,9 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('201', $response->getStatusCode());
     }
 
+    /**
+     * Test if all emojis can be retrieved from the database
+     */
     public function testGetAllEmojis()
     {
         $response = $this->client->get('/emojis');
@@ -49,6 +55,9 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('200', $response->getStatusCode());
     }
 
+    /**
+     * Test if a user can search for a particular emoji in the database
+     */
     public function testFindEmoji()
     {
         $response = $this->client->get('/emojis/2');
@@ -58,6 +67,9 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('category', json_decode($response->getBody()));
     }
 
+    /**
+     * Test if an emoji can be fully updated
+     */
     public function testUpdateEmoji()
     {
         $response = $this->client->put('/emojis/1', [
@@ -80,6 +92,9 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('200', $response->getStatusCode());
     }
 
+    /**
+     * Test if an emoji can be partially updated
+     */
     public function testPatchEmoji()
     {
         $response = $this->client->patch('/emojis/1', [
@@ -98,6 +113,9 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('200', $response->getStatusCode());
     }
 
+    /**
+     *  Test if an emoji can be deleted
+     */
     public function testDeleteEmoji()
     {
         $position = '1';
