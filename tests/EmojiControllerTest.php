@@ -41,33 +41,75 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('201', $response->getStatusCode());
     }
 
-    // public function testGetAllEmojis()
-    // {
+    public function testGetAllEmojis()
+    {
+        $response = $this->client->get('/emojis');
 
-    // }
+        $this->assertInternalType('array', json_decode($response->getBody()));
+        $this->assertEquals('200', $response->getStatusCode());
+    }
 
-    // public function testFindEmoji()
-    // {
+    public function testFindEmoji()
+    {
+        $response = $this->client->get('/emojis/2');
 
-    // }
+        $this->assertObjectHasAttribute('name', json_decode($response->getBody()));
+        $this->assertObjectHasAttribute('emoji_char', json_decode($response->getBody()));
+        $this->assertObjectHasAttribute('category', json_decode($response->getBody()));
+    }
 
-    // public function testUpdateEmoji()
-    // {
+    public function testUpdateEmoji()
+    {
+        $response = $this->client->put('/emojis/1', [
+            'form_params' => [
+                'name' => str_shuffle('ThisIsARandomString'),
+                'emoji_char' => ':-)',
+                'category' => 'Facial',
+                'keywords' => 'shocked, open-mouthed, startle',
+                'created_by' => 'Gayle Smith'
+            ],
+            'headers' => [
+               'Authorization' => $this->token
+            ]
+        ]);
 
-    // }
+        $expected = "Emoji successfully updated.";
+        $actual = json_decode($response->getBody());
 
-    // public function testCheckParamValue()
-    // {
+        $this->assertEquals($expected, $actual);
+        $this->assertEquals('200', $response->getStatusCode());
+    }
 
-    // }
+    public function testPatchEmoji()
+    {
+        $response = $this->client->patch('/emojis/1', [
+            'form_params' => [
+                'name' => str_shuffle('ThisIsARandomString'),
+            ],
+            'headers' => [
+               'Authorization' => $this->token
+            ]
+        ]);
 
-    // public function testPatchEmoji()
-    // {
+        $expected = "Emoji successfully updated.";
+        $actual = json_decode($response->getBody());
 
-    // }
+        $this->assertEquals($expected, $actual);
+        $this->assertEquals('200', $response->getStatusCode());
+    }
 
-    // public function testDeleteEmoji()
-    // {
+    public function testDeleteEmoji()
+    {
+        $position = '1';
+        $response = $this->client->delete('/emojis/'.$position, [
+            'headers' => [
+               'Authorization' => $this->token
+            ]
+        ]);
 
-    // }
+        $expected = "Emoji $position deletion successful.";
+        $actual = json_decode($response->getBody());
+
+        $this->assertEquals($expected, $actual);
+    }
 }
