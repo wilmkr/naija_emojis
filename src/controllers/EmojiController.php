@@ -44,7 +44,7 @@ class EmojiController
             }
         }
         catch(Exception $e) {
-            $app->halt(400, json_encode($e->getMessage()));
+            return $e->getMessage();
         }
     }
 

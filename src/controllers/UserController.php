@@ -44,7 +44,7 @@ class UserController
     /**
      *  This function logs in users by checking their login credentials against the database
      *  and generates a json web token (JWT) for valid users
-     * @param  Slim   $app [description]
+     *  @param  Slim   $app [description]
      */
     public static function login(Slim $app)
     {
