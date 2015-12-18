@@ -53,5 +53,9 @@ $app->delete('/emojis/:pos', function ($position) use ($app) {
     echo EmojiController::deleteEmoji($app, $position);
 });
 
+$app->get('/test', function () {
+    echo "Here's the output";
+});
+
 // Run the Slim application
 $app->run();
