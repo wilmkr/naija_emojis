@@ -54,7 +54,7 @@ $app->delete('/emojis/:pos', function ($position) use ($app) {
 });
 
 $app->get('/test', function () {
-    echo "Here's the output";
+    echo "Test output";
 });
 
 // Run the Slim application
