@@ -15,15 +15,148 @@ $ composer require Wilson/naija-emoji
 
 ## Usage
 
-- Register a new users
+- Create a new users
 
 ```
-POST https://w-naija-emojis.herokuapp.com/register
-Request body:
+Send a POST request to https://w-naija-emojis.herokuapp.com/register
+E.g. request body:
 {
     'username'  : 'wil',
     'password'  : '******'
     'name'      : 'Wilson Omokoro'
+}
+
+response
+{
+    'status'    : '200'
+    'Message'   : 'User registration successful.'
+}
+```
+
+- User login
+
+```
+Send a POST request to https://w-naija-emojis.herokuapp.com/auth/login
+E.g. request body:
+{
+    'username'  : 'wil',
+    'password'  : '******'
+}
+
+A JSON Web Token should be returned on successful login
+
+E.g. response
+{
+    'status'    : '200'
+    'Message'   : 'eyJ0eXAiOiJKV1QiLCJh.bGciOiJIUzI1NiJ9.eyJpYXQiOjE0NT'
+}
+```
+
+- User logout
+
+```
+Send a GET request to https://w-naija-emojis.herokuapp.com/auth/logout
+```
+
+- Create an Emoji
+
+```
+Send a POST request to https://w-naija-emojis.herokuapp.com/emojis
+E.g. request body:
+{
+    'name'  : 'Happy'
+    'emoji_char'  : 😀
+    'category'  : 'Facial'
+    'key_words'  : 'happy, glad, delighted'
+    'created_by'  : 'Wilson Omokoro'
+}
+
+E.g. response
+{
+    'status'    : '201'
+    'Message'   : 'Emoji creation successful.'
+}
+```
+
+- Show all Emojis in the database
+
+```
+Send a GET request to https://w-naija-emojis.herokuapp.com/emojis
+
+Response should contain all emojis in JSON format.
+```
+
+- Get a particular Emoji
+
+```
+Send a GET request containing the Emoji's position in the emojis table to https://w-naija-emojis.herokuapp.com/emojis
+
+E.g. to get the third emoji:
+
+https://w-naija-emojis.herokuapp.com/emojis/3
+
+Response should contain the emoji in JSON format.
+```
+
+- Partialy update an Emoji
+
+```
+Send a PATCH request containing the Emoji's position in the emojis table to https://w-naija-emojis.herokuapp.com/emojis
+
+E.g. to update just the name of the first emoji:
+
+https://w-naija-emojis.herokuapp.com/emojis/1
+
+request body
+{
+    'name'  : 'some other name',
+}
+
+e.g response
+{
+'status'    : '200'
+    'Message'   : 'Emoji successfully updated.'
+}
+```
+
+- Fully update an Emoji
+
+```
+Send a PUT request containing the Emoji's position in the emojis table to https://w-naija-emojis.herokuapp.com/emojis
+
+E.g. to fully update the first emoji:
+
+https://w-naija-emojis.herokuapp.com/emojis/1
+
+request body
+{
+    'name'  : 'Happy'
+    'emoji_char'  : 😀
+    'category'  : 'Facial'
+    'key_words'  : 'happy, glad, delighted'
+    'created_by'  : 'Wilson Omokoro'
+}
+
+e.g response
+{
+'status'    : '200'
+    'Message'   : 'Emoji successfully updated.'
+}
+```
+
+- Delete a particular Emoji
+
+```
+Send a DELETE request containing the Emoji's position in the emojis table to https://w-naija-emojis.herokuapp.com/emojis
+
+E.g. to DELETE the third emoji:
+
+https://w-naija-emojis.herokuapp.com/emojis/3
+
+e.g response
+{
+    'status'    : '200'
+    'Message'   : 'Emoji 3 deletion successful.'
 }
 ```
 
