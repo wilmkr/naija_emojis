@@ -19,7 +19,7 @@ $ composer require Wilson/naija-emoji
 
 ```
 Send a POST request to https://w-naija-emojis.herokuapp.com/register
-E.g. request body:
+request body:
 {
     'username'  : 'wil',
     'password'  : '******'
@@ -37,7 +37,7 @@ response
 
 ```
 Send a POST request to https://w-naija-emojis.herokuapp.com/auth/login
-E.g. request body:
+request body:
 {
     'username'  : 'wil',
     'password'  : '******'
@@ -45,7 +45,7 @@ E.g. request body:
 
 A JSON Web Token should be returned on successful login
 
-E.g. response
+response
 {
     'status'    : '200'
     'Message'   : 'eyJ0eXAiOiJKV1QiLCJh.bGciOiJIUzI1NiJ9.eyJpYXQiOjE0NT'
@@ -56,13 +56,18 @@ E.g. response
 
 ```
 Send a GET request to https://w-naija-emojis.herokuapp.com/auth/logout
+
+request header
+{
+    'Authorization' : 'eyJ0eXAiOiJKV1QiLCJh.bGciOiJIUzI1NiJ9.eyJpYXQiOjE0NT';
+}
 ```
 
 - Create an Emoji
 
 ```
 Send a POST request to https://w-naija-emojis.herokuapp.com/emojis
-E.g. request body:
+request body:
 {
     'name'  : 'Happy'
     'emoji_char'  : 😀
@@ -70,8 +75,12 @@ E.g. request body:
     'key_words'  : 'happy, glad, delighted'
     'created_by'  : 'Wilson Omokoro'
 }
+request header
+{
+    'Authorization' : 'eyJ0eXAiOiJKV1QiLCJh.bGciOiJIUzI1NiJ9.eyJpYXQiOjE0NT';
+}
 
-E.g. response
+response
 {
     'status'    : '201'
     'Message'   : 'Emoji creation successful.'
@@ -111,10 +120,14 @@ request body
 {
     'name'  : 'some other name',
 }
-
-e.g response
+request header
 {
-'status'    : '200'
+    'Authorization' : 'eyJ0eXAiOiJKV1QiLCJh.bGciOiJIUzI1NiJ9.eyJpYXQiOjE0NT';
+}
+
+response
+{
+    'status'    : '200'
     'Message'   : 'Emoji successfully updated.'
 }
 ```
@@ -136,8 +149,12 @@ request body
     'key_words'  : 'happy, glad, delighted'
     'created_by'  : 'Wilson Omokoro'
 }
+request header
+{
+    'Authorization' : 'eyJ0eXAiOiJKV1QiLCJh.bGciOiJIUzI1NiJ9.eyJpYXQiOjE0NT';
+}
 
-e.g response
+response
 {
 'status'    : '200'
     'Message'   : 'Emoji successfully updated.'
@@ -153,7 +170,12 @@ E.g. to DELETE the third emoji:
 
 https://w-naija-emojis.herokuapp.com/emojis/3
 
-e.g response
+request header
+{
+    'Authorization' : 'eyJ0eXAiOiJKV1QiLCJh.bGciOiJIUzI1NiJ9.eyJpYXQiOjE0NT';
+}
+
+response
 {
     'status'    : '200'
     'Message'   : 'Emoji 3 deletion successful.'
