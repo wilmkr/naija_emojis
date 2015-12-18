@@ -18,7 +18,7 @@ $ composer require Wilson/naija-emoji
 - Create a new users
 
 ```
-Send a POST request to https://w-naija-emojis.herokuapp.com/register
+Send a POST request to https://w-naija-emoji.herokuapp.com/register
 request body:
 {
     'username'  : 'wil',
@@ -36,7 +36,7 @@ response
 - User login
 
 ```
-Send a POST request to https://w-naija-emojis.herokuapp.com/auth/login
+Send a POST request to https://w-naija-emoji.herokuapp.com/auth/login
 request body:
 {
     'username'  : 'wil',
@@ -55,7 +55,7 @@ response
 - User logout
 
 ```
-Send a GET request to https://w-naija-emojis.herokuapp.com/auth/logout
+Send a GET request to https://w-naija-emoji.herokuapp.com/auth/logout
 
 request header
 {
@@ -66,7 +66,7 @@ request header
 - Create an Emoji
 
 ```
-Send a POST request to https://w-naija-emojis.herokuapp.com/emojis
+Send a POST request to https://w-naija-emoji.herokuapp.com/emojis
 request body:
 {
     'name'  : 'Happy'
@@ -90,7 +90,7 @@ response
 - Show all Emojis in the database
 
 ```
-Send a GET request to https://w-naija-emojis.herokuapp.com/emojis
+Send a GET request to https://w-naija-emoji.herokuapp.com/emojis
 
 Response should contain all emojis in JSON format.
 ```
@@ -98,7 +98,7 @@ Response should contain all emojis in JSON format.
 - Get a particular Emoji
 
 ```
-Send a GET request containing the Emoji's position in the emojis table to https://w-naija-emojis.herokuapp.com/emojis
+Send a GET request containing the Emoji's position in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
 
 E.g. to get the third emoji:
 
@@ -110,7 +110,7 @@ Response should contain the emoji in JSON format.
 - Partialy update an Emoji
 
 ```
-Send a PATCH request containing the Emoji's position in the emojis table to https://w-naija-emojis.herokuapp.com/emojis
+Send a PATCH request containing the Emoji's position in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
 
 E.g. to update just the name of the first emoji:
 
@@ -135,7 +135,7 @@ response
 - Fully update an Emoji
 
 ```
-Send a PUT request containing the Emoji's position in the emojis table to https://w-naija-emojis.herokuapp.com/emojis
+Send a PUT request containing the Emoji's position in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
 
 E.g. to fully update the first emoji:
 
@@ -164,7 +164,7 @@ response
 - Delete a particular Emoji
 
 ```
-Send a DELETE request containing the Emoji's position in the emojis table to https://w-naija-emojis.herokuapp.com/emojis
+Send a DELETE request containing the Emoji's position in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
 
 E.g. to DELETE the third emoji:
 
