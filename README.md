@@ -15,6 +15,18 @@ $ composer require Wilson/naija-emoji
 
 ## Usage
 
+- Register a new users
+
+```
+POST https://w-naija-emojis.herokuapp.com/register
+Request body:
+{
+    'username'  : 'wil',
+    'password'  : '******'
+    'name'      : 'Wilson Omokoro'
+}
+```
+
 
 ## Testing
 
