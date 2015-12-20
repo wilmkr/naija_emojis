@@ -106,6 +106,10 @@ class EmojiController
         {
             $emoji = Emoji::find($position);
 
+            if(is_string($emoji)) {
+                $app->halt(404, json_encode($emoji));
+            }
+
             $emoji->name = self::checkParamValue($app, "name", $app->request->params('name'));
             $emoji->emoji_char = self::checkParamValue($app, "emoji_char", $app->request->params('emoji_char'));
             $emoji->category = self::checkParamValue($app, "category", $app->request->params('category'));
@@ -159,6 +163,10 @@ class EmojiController
             try {
                 $emoji = Emoji::find($position);
 
+                if(is_string($emoji)) {
+                    $app->halt(404, json_encode($emoji));
+                }
+
                 $params = $app->request->patch();
 
                 foreach ($params as $key => $value) {
@@ -197,7 +205,7 @@ class EmojiController
             $rows = Emoji::destroy($position);
 
             if(is_string($rows)) {
-                return json_encode($rows);
+                $app->halt(404, json_encode($rows));
             }
 
             if($rows > 0) {
