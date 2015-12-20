@@ -45,7 +45,7 @@ class EmojiController
             }
         }
         catch(Exception $e) {
-            return $e->getMessage();
+            return json_encode($e->getMessage());
         }
     }
 
@@ -175,7 +175,7 @@ class EmojiController
                 }
             }
             catch(Exception $e) {
-                return $e->getMessage();
+                return json_encode($e->getMessage());
             }
         }
     }
@@ -196,8 +196,12 @@ class EmojiController
         if(is_object($auth)) {
             $rows = Emoji::destroy($position);
 
+            if(is_string($rows)) {
+                return json_encode($rows);
+            }
+
             if($rows > 0) {
-                return json_encode("Emoji $position deletion successful.");
+                return json_encode("Emoji $position deleted successfully.");
             }
             else {
                 return json_encode("Emoji $position deletion failed!");
