@@ -28,6 +28,7 @@ class EmojiController
                 $emoji->name = $app->request->params('name');
                 $emoji->emoji_char = $app->request->params('emoji_char');
                 $emoji->category = $app->request->params('category');
+                $emoji->keywords = $app->request->params('keywords');
                 $emoji->created_by = $app->request->params('created_by');
 
                 $rows = $emoji->save();
