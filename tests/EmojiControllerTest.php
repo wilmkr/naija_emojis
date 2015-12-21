@@ -27,7 +27,7 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         $response = $this->client->post('/emojis', [
             'form_params' => [
                 'name' => 'Surprise',
-                'emoj_char' => ':-o',
+                'emoji_char' => '😀',
                 'category' => 'Facial',
                 'keywords' => 'shocked, open-mouthed, startle',
                 'created_by' => 'Gayle Smith'
@@ -37,10 +37,6 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $expected = "Emoji creation successful.";
-        $actual = json_decode($response->getBody());
-
-        $this->assertEquals($expected, $actual);
         $this->assertEquals('201', $response->getStatusCode());
     }
 
@@ -60,7 +56,7 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testFindEmoji()
     {
-        $response = $this->client->get('/emojis/2');
+        $response = $this->client->get('/emojis/1');
 
         $this->assertObjectHasAttribute('name', json_decode($response->getBody()));
         $this->assertObjectHasAttribute('emoji_char', json_decode($response->getBody()));
@@ -75,31 +71,10 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         $response = $this->client->put('/emojis/1', [
             'form_params' => [
                 'name' => str_shuffle('ThisIsARandomString'),
-                'emoji_char' => ':-)',
+                'emoji_char' => '😇',
                 'category' => 'Facial',
                 'keywords' => 'shocked, open-mouthed, startle',
                 'created_by' => 'Gayle Smith'
-            ],
-            'headers' => [
-               'Authorization' => $this->token
-            ]
-        ]);
-
-        $expected = "Emoji successfully updated.";
-        $actual = json_decode($response->getBody());
-
-        $this->assertEquals($expected, $actual);
-        $this->assertEquals('200', $response->getStatusCode());
-    }
-
-    /**
-     * Test if an emoji can be partially updated
-     */
-    public function testPatchEmoji()
-    {
-        $response = $this->client->patch('/emojis/1', [
-            'form_params' => [
-                'name' => str_shuffle('ThisIsARandomString'),
             ],
             'headers' => [
                'Authorization' => $this->token
@@ -125,7 +100,7 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $expected = "Emoji $position deletion successful.";
+        $expected = "Emoji $position deleted successfully.";
         $actual = json_decode($response->getBody());
 
         $this->assertEquals($expected, $actual);
