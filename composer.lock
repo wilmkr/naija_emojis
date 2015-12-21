@@ -862,12 +862,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/andela-womokoro/potato-orm.git",
-                "reference": "4d95828ca5606929ebe1f6e35a8434b030273d1f"
+                "reference": "28ed75d0246308ab443ee724662b084ec30f6a05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/andela-womokoro/potato-orm/zipball/4d95828ca5606929ebe1f6e35a8434b030273d1f",
-                "reference": "4d95828ca5606929ebe1f6e35a8434b030273d1f",
+                "url": "https://api.github.com/repos/andela-womokoro/potato-orm/zipball/28ed75d0246308ab443ee724662b084ec30f6a05",
+                "reference": "28ed75d0246308ab443ee724662b084ec30f6a05",
                 "shasum": ""
             },
             "require": {
@@ -896,7 +896,7 @@
                 }
             ],
             "description": "A simple PHP agnostic ORM",
-            "time": "2015-12-18 15:27:40"
+            "time": "2015-12-20 20:58:07"
         }
     ],
     "packages-dev": [
