@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/andela-womokoro/naija_emojis.svg)](https://travis-ci.org/andela-womokoro/naija_emojis)
 
+[![Coverage Status](https://coveralls.io/repos/andela-womokoro/naija_emojis/badge.svg?branch=master&service=github)](https://coveralls.io/github/andela-womokoro/naija_emojis?branch=master)
+
 
 This is a simple RESTFul API rendering emoji service to users. It was built with PHP and implements the Slim framework and JSON web token (JWT) for user authentication.
 
