@@ -24,7 +24,7 @@ $app->get('/auth/logout', function () use ($app) {
 });
 
 // Create an emoji
-$app->post('/emojis', function () use ($app) {
+$app->post('/emoji', function () use ($app) {
     echo EmojiController::createEmoji($app);
 });
 
@@ -34,23 +34,23 @@ $app->get('/emojis', function () use ($app) {
 });
 
 // Get a single emoji
-$app->get('/emojis/:pos', function ($position) use ($app) {
-    echo EmojiController::findEmoji($app, $position);
+$app->get('/emoji/:id', function ($id) use ($app) {
+    echo EmojiController::findEmoji($app, $id);
 });
 
 // Partially update an emoji
-$app->patch('/emojis/:pos', function ($position) use ($app) {
-   echo EmojiController::patchEmoji($app, $position);
+$app->patch('/emoji/:id', function ($id) use ($app) {
+   echo EmojiController::patchEmoji($app, $id);
 });
 
 // Fully update an emoji
-$app->put('/emojis/:pos', function ($position) use ($app) {
-    echo EmojiController::updateEmoji($app, $position);
+$app->put('/emoji/:id', function ($id) use ($app) {
+    echo EmojiController::updateEmoji($app, $id);
 });
 
 // Delete an emoji
-$app->delete('/emojis/:pos', function ($position) use ($app) {
-    echo EmojiController::deleteEmoji($app, $position);
+$app->delete('/emoji/:id', function ($id) use ($app) {
+    echo EmojiController::deleteEmoji($app, $id);
 });
 
 $app->get('/test', function () {

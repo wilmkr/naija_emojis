@@ -72,14 +72,14 @@ class EmojiController
     /**
      * This method is used to search for a particular emoji
      * @param  Slim   $app      [Slim instance]
-     * @param  $position        [the position of the emoji in the emojis table]
+     * @param  $id              [the id of the emoji in the emojis table]
      * @return json encoded string
      */
-    public static function findEmoji(Slim $app, $position)
+    public static function findEmoji(Slim $app, $id)
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
-        $returnedValue = Emoji::find($position);
+        $returnedValue = Emoji::findById($id);
 
         if(is_object($returnedValue)) {
             return $returnedValue->result;
@@ -93,9 +93,9 @@ class EmojiController
     /**
      * This function fully updates an emoji in the database i.e. updates all fields of an emoji record
      * @param  Slim   $app      [Slim instance]
-     * @param  $position        [the position of the emoji in the emojis table]
+     * @param  $id              [the id of the emoji in the emojis table]
      */
-    public static function updateEmoji(Slim $app, $position)
+    public static function updateEmoji(Slim $app, $id)
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
@@ -104,7 +104,7 @@ class EmojiController
 
         if(is_object($auth))
         {
-            $emoji = Emoji::find($position);
+            $emoji = Emoji::findById($id);
 
             if(is_string($emoji)) {
                 $app->halt(404, json_encode($emoji));
@@ -149,9 +149,9 @@ class EmojiController
     /**
      * This function updates some fields of an empji record in the database
      * @param  Slim   $app      [Slim instance]
-     * @param  $position        [the position of the emoji in the emojis table]
+     * @param  $id              [the id of the emoji in the emojis table]
      */
-    public static function patchEmoji(Slim $app, $position)
+    public static function patchEmoji(Slim $app, $id)
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
@@ -161,7 +161,7 @@ class EmojiController
         if(is_object($auth))
         {
             try {
-                $emoji = Emoji::find($position);
+                $emoji = Emoji::findById($id);
 
                 if(is_string($emoji)) {
                     $app->halt(404, json_encode($emoji));
@@ -191,10 +191,10 @@ class EmojiController
     /**
      * This method is used to delete an emoji from the database
      * @param  Slim   $app      [Slim instance]
-     * @param  $position        [the position of the emoji in the emojis table]
+     * @param  $id              [the id of the emoji in the emojis table]
      * @return json encoded string
      */
-    public static function deleteEmoji(Slim $app, $position)
+    public static function deleteEmoji(Slim $app, $id)
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
@@ -202,17 +202,17 @@ class EmojiController
         $auth = json_decode($auth);
 
         if(is_object($auth)) {
-            $rows = Emoji::destroy($position);
+            $rows = Emoji::destroyById($id);
 
             if(is_string($rows)) {
                 $app->halt(404, json_encode($rows));
             }
 
             if($rows > 0) {
-                return json_encode("Emoji $position deleted successfully.");
+                return json_encode("Emoji with ID $id deleted successfully.");
             }
             else {
-                return json_encode("Emoji $position deletion failed!");
+                return json_encode("Failed to delete Emoji with ID $id.");
             }
         }
         else {
