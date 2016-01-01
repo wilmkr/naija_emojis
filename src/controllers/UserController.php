@@ -12,6 +12,8 @@ use Wilson\Source\Configuration;
 
 class UserController
 {
+    protected static $responseMessage = [];
+
     /**
      *  This function creates a new instance of a user
      * @param  Slim   $app
@@ -23,21 +25,31 @@ class UserController
         try {
             $user = new User();
 
-            $user->username = $app->request->params('username');
-            $user->password = $app->request->params('password');
-            $user->name = $app->request->params('name');
+            $user->username = Authenticator::checkParamValue($app, "username", $app->request->params('username'));
+            $user->password = Authenticator::checkParamValue($app, "password", $app->request->params('password'));
+            $user->name = Authenticator::checkParamValue($app, "name", $app->request->params('name'));
 
             $rows = $user->save();
 
             if($rows > 0) {
-                $app->halt(201, json_encode("User registration successful."));
+                self::$responseMessage = [
+                    'Status' => '201',
+                    'Message' => 'User registration successful.'
+                ];
+
+                $app->halt(201, json_encode(self::$responseMessage));
             }
             else {
                 throw new Exception("User registration failed!");
             }
         }
         catch(Exception $e) {
-            return $e->getMessage();
+            self::$responseMessage = [
+                'Status' => '400',
+                'Message' => 'Exception: '.$e->getMessage()
+            ];
+
+            $app->halt(400, json_encode(self::$responseMessage));
         }
     }
 
@@ -76,14 +88,30 @@ class UserController
 
                 $jwt = JWT::encode($token, $secretKey);
 
-                return json_encode($jwt);
+                self::$responseMessage = [
+                    'Status' => '200',
+                    'Message' => 'Login successful',
+                    'Token' => $jwt
+                ];
+
+                return json_encode(self::$responseMessage);
             }
             else {
-                $app->halt(404, json_encode("Login failed. Username or password is invalid."));
+                self::$responseMessage = [
+                    'Status' => '404',
+                    'Message' => 'Login failed. Username or password is invalid.'
+                ];
+
+                $app->halt(404, json_encode(self::$responseMessage));
             }
         }
         catch(Exception $e) {
-            return $e->getMessage();
+            self::$responseMessage = [
+                'Status' => '400',
+                'Message' => 'Exception: '.$e->getMessage()
+            ];
+
+            $app->halt(400, json_encode(self::$responseMessage));
         }
     }
 
@@ -93,11 +121,12 @@ class UserController
      */
     public static function logout(Slim $app)
     {
-        $auth = Authenticator::authenticate($app);
-        $auth = json_decode($auth);
+        Authenticator::authenticate($app);
 
-        if(is_object($auth)) {
-            return json_encode("You've logged out successfully.");
-        }
+        self::$responseMessage = [
+            'Status' => '200',
+            'Message' => "You've logged out successfully."
+        ];
+        return json_encode(self::$responseMessage);
     }
 }

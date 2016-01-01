@@ -9,6 +9,8 @@ use Wilson\Source\Authenticator;
 
 class EmojiController
 {
+    protected static $responseMessage = [];
+
     /**
      * This method creates an instance of an emoji and stores it in the database.
      * @param  Slim   $app      [Slim instance]
@@ -17,35 +19,33 @@ class EmojiController
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
-        try {
-            $auth = Authenticator::authenticate($app);
-            $auth = json_decode($auth);
+        Authenticator::authenticate($app);
 
-            if(is_object($auth)) {
+        $emoji = new Emoji();
 
-                $emoji = new Emoji();
+        $emoji->name = Authenticator::checkParamValue($app, "name", $app->request->params('name'));
+        $emoji->emoji_char = Authenticator::checkParamValue($app, "emoji_char", $app->request->params('emoji_char'));
+        $emoji->category = Authenticator::checkParamValue($app, "category", $app->request->params('category'));
+        $emoji->keywords = Authenticator::checkParamValue($app, "keywords", $app->request->params('keywords'));
+        $emoji->created_by = Authenticator::checkParamValue($app, "created_by", $app->request->params('created_by'));
 
-                $emoji->name = self::checkParamValue($app, "name", $app->request->params('name'));
-                $emoji->emoji_char = self::checkParamValue($app, "emoji_char", $app->request->params('emoji_char'));
-                $emoji->category = self::checkParamValue($app, "category", $app->request->params('category'));
-                $emoji->keywords = self::checkParamValue($app, "keywords", $app->request->params('keywords'));
-                $emoji->created_by = self::checkParamValue($app, "created_by", $app->request->params('created_by'));
+        $rows = $emoji->save();
 
-                $rows = $emoji->save();
+        if($rows > 0) {
+            self::$responseMessage = [
+                'Status' => '201',
+                'Message' => 'Emoji creation successful.'
+            ];
 
-                if($rows > 0) {
-                    $app->halt(201, json_encode("Emoji creation successful."));
-                }
-                else {
-                    throw new Exception("Emoji creation failed!");
-                }
-            }
-            else {
-                $app->halt(401, json_encode("You're not authorized to perform this action. Please login."));
-            }
+            $app->halt(201, json_encode(self::$responseMessage));
         }
-        catch(Exception $e) {
-            return json_encode($e->getMessage());
+        else {
+            self::$responseMessage = [
+                'Status' => '400',
+                'Message' => 'Emoji creation failed!'
+            ];
+
+            $app->halt(400, json_encode(self::$responseMessage));
         }
     }
 
@@ -65,7 +65,12 @@ class EmojiController
         }
 
         if(is_string($returnedValue)) {
-            $app->halt(204, json_encode($returnedValue));
+            self::$responseMessage = [
+                'Status' => '204',
+                'Message' => $returnedValue
+            ];
+
+            $app->halt(204, json_encode(self::$responseMessage));
         }
     }
 
@@ -89,7 +94,12 @@ class EmojiController
         }
 
         if(is_string($returnedValue)) {
-            $app->halt(404, json_encode($returnedValue));
+            self::$responseMessage = [
+                'Status' => '404',
+                'Message' => $returnedValue
+            ];
+
+            $app->halt(404, json_encode(self::$responseMessage));
         }
     }
 
@@ -102,49 +112,42 @@ class EmojiController
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
-        $auth = Authenticator::authenticate($app);
-        $auth = json_decode($auth);
+        Authenticator::authenticate($app);
 
-        if(is_object($auth))
-        {
-            $emoji = Emoji::findById($id);
+        $emoji = Emoji::findById($id);
 
-            if(is_string($emoji)) {
-                $app->halt(404, json_encode($emoji));
-            }
+        if(is_string($emoji)) {
+            self::$responseMessage = [
+                'Status' => '404',
+                'Message' => $emoji
+            ];
 
-            $emoji->name = self::checkParamValue($app, "name", $app->request->params('name'));
-            $emoji->emoji_char = self::checkParamValue($app, "emoji_char", $app->request->params('emoji_char'));
-            $emoji->category = self::checkParamValue($app, "category", $app->request->params('category'));
-            $emoji->keywords = self::checkParamValue($app, "keywords", $app->request->params('keywords'));
-            $emoji->created_by = self::checkParamValue($app, "created_by", $app->request->params('created_by'));
-
-            $rows = $emoji->save();
-
-            if($rows > 0) {
-                $app->halt(200, json_encode("Emoji successfully updated."));
-            }
-            else {
-                $app->halt(401, json_encode("Emoji full update failed!"));
-            }
+            $app->halt(404, json_encode(self::$responseMessage));
         }
-    }
 
-    /**
-     * This function checks if a parameter contained in a request has a valid value
-     * @param  Slim   $app   [Slim instance]
-     * @param  $param [the parameter to check]
-     * @return string
-     */
-    public static function checkParamValue(Slim $app, $param, $value)
-    {
-        $app->response->headers->set('Content-Type', 'application/json');
+        $emoji->name = Authenticator::checkParamValue($app, "name", $app->request->params('name'));
+        $emoji->emoji_char = Authenticator::checkParamValue($app, "emoji_char", $app->request->params('emoji_char'));
+        $emoji->category = Authenticator::checkParamValue($app, "category", $app->request->params('category'));
+        $emoji->keywords = Authenticator::checkParamValue($app, "keywords", $app->request->params('keywords'));
+        $emoji->created_by = Authenticator::checkParamValue($app, "created_by", $app->request->params('created_by'));
 
-        if(is_null($value) || empty($value)) {
-           $app->halt(401, json_encode("Missing or invalid parameter: $param"));
+        $rows = $emoji->save();
+
+        if($rows > 0) {
+            self::$responseMessage = [
+                'Status' => '200',
+                'Message' => 'Emoji successfully updated.'
+            ];
+
+            $app->halt(200, json_encode(self::$responseMessage));
         }
         else {
-            return $value;
+            self::$responseMessage = [
+                'Status' => '401',
+                'Message' => 'Emoji full update failed!'
+            ];
+
+            $app->halt(401, json_encode(self::$responseMessage));
         }
     }
 
@@ -157,36 +160,42 @@ class EmojiController
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
-        $auth = Authenticator::authenticate($app);
-        $auth = json_decode($auth);
+        Authenticator::authenticate($app);
 
-        if(is_object($auth))
-        {
-            try {
-                $emoji = Emoji::findById($id);
+        $emoji = Emoji::findById($id);
 
-                if(is_string($emoji)) {
-                    $app->halt(404, json_encode($emoji));
-                }
+        if(is_string($emoji)) {
+            self::$responseMessage = [
+                'Status' => '404',
+                'Message' => $emoji
+            ];
 
-                $params = $app->request->patch();
+            $app->halt(404, json_encode(self::$responseMessage));
+        }
 
-                foreach ($params as $key => $value) {
-                    $emoji->$key = $value;
-                }
+        $params = $app->request->patch();
 
-                $rows = $emoji->save();
+        foreach ($params as $key => $value) {
+            $emoji->$key = $value;
+        }
 
-                if($rows > 0) {
-                    $app->halt(200, json_encode("Emoji successfully updated."));
-                }
-                else {
-                    throw new Exception("Emoji partial update failed!");
-                }
-            }
-            catch(Exception $e) {
-                return json_encode($e->getMessage());
-            }
+        $rows = $emoji->save();
+
+        if($rows > 0) {
+            self::$responseMessage = [
+                'Status' => '200',
+                'Message' => 'Emoji successfully updated.'
+            ];
+
+            $app->halt(200, json_encode(self::$responseMessage));
+        }
+        else {
+            self::$responseMessage = [
+                'Status' => '400',
+                'Message' => 'Emoji partial update failed!'
+            ];
+
+            $app->halt(400, json_encode(self::$responseMessage));
         }
     }
 
@@ -200,25 +209,34 @@ class EmojiController
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
-        $auth = Authenticator::authenticate($app);
-        $auth = json_decode($auth);
+        Authenticator::authenticate($app);
 
-        if(is_object($auth)) {
-            $rows = Emoji::destroyById($id);
+        $rows = Emoji::destroyById($id);
 
-            if(is_string($rows)) {
-                $app->halt(404, json_encode($rows));
-            }
+        if(is_string($rows)) {
+            self::$responseMessage = [
+                'Status' => '404',
+                'Message' => $rows
+            ];
 
-            if($rows > 0) {
-                return json_encode("Emoji with ID $id deleted successfully.");
-            }
-            else {
-                return json_encode("Failed to delete Emoji with ID $id.");
-            }
+            $app->halt(404, json_encode(self::$responseMessage));
+        }
+
+        if($rows > 0) {
+            self::$responseMessage = [
+                'Status' => '200',
+                'Message' => "Emoji with ID $id deleted successfully."
+            ];
+
+            $app->halt(200, json_encode(self::$responseMessage));
         }
         else {
-            $app->halt(401, json_encode("You're not authorized to perform this action. Please login."));
+            self::$responseMessage = [
+                'Status' => '400',
+                'Message' => "Failed to delete Emoji with ID $id."
+            ];
+
+            $app->halt(400, json_encode(self::$responseMessage));
         }
     }
 }
