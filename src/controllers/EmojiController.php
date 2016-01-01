@@ -25,11 +25,11 @@ class EmojiController
 
                 $emoji = new Emoji();
 
-                $emoji->name = $app->request->params('name');
-                $emoji->emoji_char = $app->request->params('emoji_char');
-                $emoji->category = $app->request->params('category');
-                $emoji->keywords = $app->request->params('keywords');
-                $emoji->created_by = $app->request->params('created_by');
+                $emoji->name = self::checkParamValue($app, "name", $app->request->params('name'));
+                $emoji->emoji_char = self::checkParamValue($app, "emoji_char", $app->request->params('emoji_char'));
+                $emoji->category = self::checkParamValue($app, "category", $app->request->params('category'));
+                $emoji->keywords = self::checkParamValue($app, "keywords", $app->request->params('keywords'));
+                $emoji->created_by = self::checkParamValue($app, "created_by", $app->request->params('created_by'));
 
                 $rows = $emoji->save();
 
@@ -82,6 +82,9 @@ class EmojiController
         $returnedValue = Emoji::findById($id);
 
         if(is_object($returnedValue)) {
+            // $x = (array) json_decode($returnedValue->result);
+            // echo $x['keywords'];
+
             return $returnedValue->result;
         }
 
@@ -136,10 +139,9 @@ class EmojiController
     public static function checkParamValue(Slim $app, $param, $value)
     {
         $app->response->headers->set('Content-Type', 'application/json');
-        echo "value: $value";
 
         if(is_null($value) || empty($value)) {
-           $app->halt(401, json_encode("Cannot update. Missing or invalid parameter: $param"));
+           $app->halt(401, json_encode("Missing or invalid parameter: $param"));
         }
         else {
             return $value;
