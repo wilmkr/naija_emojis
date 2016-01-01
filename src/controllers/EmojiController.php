@@ -2,6 +2,7 @@
 
 namespace Wilson\Source\Controllers;
 
+use PDO;
 use Exception;
 use Slim\Slim;
 use Wilson\Source\Models\Emoji;
@@ -28,6 +29,19 @@ class EmojiController
         $emoji->category = Authenticator::checkParamValue($app, "category", $app->request->params('category'));
         $emoji->keywords = Authenticator::checkParamValue($app, "keywords", $app->request->params('keywords'));
         $emoji->created_by = Authenticator::checkParamValue($app, "created_by", $app->request->params('created_by'));
+
+        $conn = Emoji::getConnection();
+        $stmt = $conn->query("SELECT * FROM emojis WHERE emoji_char='$emoji->emoji_char'");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($result) {
+            self::$responseMessage = [
+                'Status' => '400',
+                'Message' => "The emoji $emoji->emoji_char already exists."
+            ];
+
+            $app->halt(400, json_encode(self::$responseMessage));
+        }
 
         $rows = $emoji->save();
 

@@ -59,7 +59,7 @@ class Authenticator
     /**
      * This function checks if a parameter contained in a request has a valid value
      * @param  Slim   $app   [Slim instance]
-     * @param  $param [the parameter to check]
+     * @param  $param        [the parameter to check]
      * @return string
      */
     public static function checkParamValue(Slim $app, $param, $value)

@@ -22,31 +22,39 @@ class UserController
     {
         $app->response->headers->set('Content-Type', 'application/json');
 
-        try {
-            $user = new User();
+        $user = new User();
 
-            $user->username = Authenticator::checkParamValue($app, "username", $app->request->params('username'));
-            $user->password = Authenticator::checkParamValue($app, "password", $app->request->params('password'));
-            $user->name = Authenticator::checkParamValue($app, "name", $app->request->params('name'));
+        $user->username = Authenticator::checkParamValue($app, "username", $app->request->params('username'));
+        $user->password = Authenticator::checkParamValue($app, "password", $app->request->params('password'));
+        $user->name = Authenticator::checkParamValue($app, "name", $app->request->params('name'));
 
-            $rows = $user->save();
+        $conn = User::getConnection();
+        $stmt = $conn->query("SELECT * FROM users WHERE username='$user->username'");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if($rows > 0) {
-                self::$responseMessage = [
-                    'Status' => '201',
-                    'Message' => 'User registration successful.'
-                ];
-
-                $app->halt(201, json_encode(self::$responseMessage));
-            }
-            else {
-                throw new Exception("User registration failed!");
-            }
-        }
-        catch(Exception $e) {
+        if($result) {
             self::$responseMessage = [
                 'Status' => '400',
-                'Message' => 'Exception: '.$e->getMessage()
+                'Message' => "The user '$user->username' already exists."
+            ];
+
+            $app->halt(400, json_encode(self::$responseMessage));
+        }
+
+        $rows = $user->save();
+
+        if($rows > 0) {
+            self::$responseMessage = [
+                'Status' => '201',
+                'Message' => 'User registration successful.'
+            ];
+
+            $app->halt(201, json_encode(self::$responseMessage));
+        }
+        else {
+            self::$responseMessage = [
+                'Status' => '400',
+                'Message' => 'User registration failed!'
             ];
 
             $app->halt(400, json_encode(self::$responseMessage));
@@ -65,53 +73,42 @@ class UserController
         $username = $app->request->params('username');
         $password = $app->request->params('password');
 
-        try
+        $conn = User::getConnection();
+        $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+        $stmt = $conn->query($sql);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($result)
         {
-            $conn = User::getConnection();
-            $sql = "SELECT * FROM users WHERE username='$username'";
-            $stmt = $conn->query($sql);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if($password === $result['password'])
-            {
-                $token = [
-                    'iat'  => time(),
-                    'exp'  => time() + 3600,
-                    'data' => [
-                        'userID'   => $result['user_id'],
-                        'username' => $username
-                    ]
-                ];
-
-                Configuration::load();
-                $secretKey = getenv('JWT_KEY');
-
-                $jwt = JWT::encode($token, $secretKey);
-
-                self::$responseMessage = [
-                    'Status' => '200',
-                    'Message' => 'Login successful',
-                    'Token' => $jwt
-                ];
-
-                return json_encode(self::$responseMessage);
-            }
-            else {
-                self::$responseMessage = [
-                    'Status' => '404',
-                    'Message' => 'Login failed. Username or password is invalid.'
-                ];
-
-                $app->halt(404, json_encode(self::$responseMessage));
-            }
-        }
-        catch(Exception $e) {
-            self::$responseMessage = [
-                'Status' => '400',
-                'Message' => 'Exception: '.$e->getMessage()
+            $token = [
+                'iat'  => time(),
+                'exp'  => time() + 3600,
+                'data' => [
+                    'userID'   => $result['user_id'],
+                    'username' => $username
+                ]
             ];
 
-            $app->halt(400, json_encode(self::$responseMessage));
+            Configuration::load();
+            $secretKey = getenv('JWT_KEY');
+
+            $jwt = JWT::encode($token, $secretKey);
+
+            self::$responseMessage = [
+                'Status' => '200',
+                'Message' => 'Login successful',
+                'Token' => $jwt
+            ];
+
+            return json_encode(self::$responseMessage);
+        }
+        else {
+            self::$responseMessage = [
+                'Status' => '404',
+                'Message' => 'Login failed. Username or password is invalid.'
+            ];
+
+            $app->halt(404, json_encode(self::$responseMessage));
         }
     }
 
