@@ -12,11 +12,12 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->client = new Client(['base_uri' => 'https://w-naija-emoji.herokuapp.com']);
+        //$this->client = new Client(['base_uri' => 'https://w-naija-emoji.herokuapp.com']);
+        $this->client = new Client(['base_uri' => 'http://checkpoint3.app']);
 
         $response = $this->client->post('/auth/login', ['query' => ['username' => 'Wil', 'password' => 'password']]);
 
-        $this->token = json_decode($response->getBody());
+        $this->token = json_decode($response->getBody())->Token;
     }
 
     /**
@@ -24,7 +25,7 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateEmoji()
     {
-        $response = $this->client->post('/emojis', [
+        $response = $this->client->post('/emoji', [
             'form_params' => [
                 'name' => 'Surprise',
                 'emoji_char' => '😀',
@@ -56,7 +57,7 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testFindEmoji()
     {
-        $response = $this->client->get('/emojis/1');
+        $response = $this->client->get('/emoji/1');
 
         $this->assertObjectHasAttribute('name', json_decode($response->getBody()));
         $this->assertObjectHasAttribute('emoji_char', json_decode($response->getBody()));
@@ -68,7 +69,7 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateEmoji()
     {
-        $response = $this->client->put('/emojis/1', [
+        $response = $this->client->put('/emoji/1', [
             'form_params' => [
                 'name' => str_shuffle('ThisIsARandomString'),
                 'emoji_char' => '😇',
@@ -94,7 +95,7 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
     public function testDeleteEmoji()
     {
         $position = '1';
-        $response = $this->client->delete('/emojis/'.$position, [
+        $response = $this->client->delete('/emoji/'.$position, [
             'headers' => [
                'Authorization' => $this->token
             ]

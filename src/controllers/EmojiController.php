@@ -75,6 +75,11 @@ class EmojiController
         $returnedValue = Emoji::getAll();
 
         if(is_array($returnedValue)) {
+
+            for($i = 0; $i < count($returnedValue); $i++) {
+                $returnedValue[$i]['keywords'] = [$returnedValue[$i]['keywords']];
+            }
+
             return json_encode($returnedValue);
         }
 
@@ -101,10 +106,11 @@ class EmojiController
         $returnedValue = Emoji::findById($id);
 
         if(is_object($returnedValue)) {
-            // $x = (array) json_decode($returnedValue->result);
-            // echo $x['keywords'];
+            $obj = json_decode($returnedValue->result);
+            $obj->keywords = [$obj->keywords];
 
-            return $returnedValue->result;
+            //return $returnedValue->result;
+            return json_encode($obj);
         }
 
         if(is_string($returnedValue)) {
