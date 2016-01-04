@@ -7,6 +7,7 @@ use Exception;
 use Slim\Slim;
 use Wilson\Source\Models\Emoji;
 use Wilson\Source\Authenticator;
+use Wilson\Source\OutputFormatter;
 
 class EmojiController
 {
