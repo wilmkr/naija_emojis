@@ -29,7 +29,7 @@ request body:
 
 response
 {
-    'status'    : '200'
+    'Status'    : '200'
     'Message'   : 'User registration successful.'
 }
 ```
@@ -48,8 +48,9 @@ A JSON Web Token should be returned on successful login
 
 response
 {
-    'status'    : '200'
-    'Message'   : 'eyJ0eXAiOiJKV1QiLCJh.bGciOiJIUzI1NiJ9.eyJpYXQiOjE0NT'
+    'Status'    : '200'
+    'Message'   : 'Login successful'
+    'Token'     : 'eyJ0eXAiOiJKV1QiLCJh.bGciOiJIUzI1NiJ9.eyJpYXQiOjE0NT'
 }
 ```
 
@@ -73,7 +74,7 @@ request body:
     'name'  : 'Happy'
     'emoji_char'  : 😀
     'category'  : 'Facial'
-    'key_words'  : 'happy, glad, delighted'
+    'key_words'  : ['happy, glad, delighted']
     'created_by'  : 'Wilson Omokoro'
 }
 request header
@@ -83,7 +84,7 @@ request header
 
 response
 {
-    'status'    : '201'
+    'Status'    : '201'
     'Message'   : 'Emoji creation successful.'
 }
 ```
@@ -128,7 +129,7 @@ request header
 
 response
 {
-    'status'    : '200'
+    'Status'    : '200'
     'Message'   : 'Emoji successfully updated.'
 }
 ```
@@ -157,7 +158,7 @@ request header
 
 response
 {
-'status'    : '200'
+    'Status'    : '200'
     'Message'   : 'Emoji successfully updated.'
 }
 ```
@@ -178,7 +179,7 @@ request header
 
 response
 {
-    'status'    : '200'
+    'Status'    : '200'
     'Message'   : 'Emoji 3 deletion successful.'
 }
 ```
