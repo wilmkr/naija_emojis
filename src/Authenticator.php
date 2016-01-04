@@ -5,7 +5,7 @@ namespace Wilson\Source;
 use Exception;
 use Slim\Slim;
 use Firebase\JWT\JWT;
-use Wilson\Source\Authenticator;
+use Wilson\Source\OutputFormatter;
 use Firebase\JWT\ExpiredException;
 
 class Authenticator
@@ -22,12 +22,7 @@ class Authenticator
         $token = $app->request->headers->get('Authorization');
 
         if(is_null($token)) {
-            self::$responseMessage = [
-                'Status' => '401',
-                'Message' => "You're not authorized to perform this action. Please login."
-            ];
-
-            $app->halt(401, json_encode(self::$responseMessage));
+            OutputFormatter::formatOutput($app, 401, "You're not authorized to perform this action. Please login.");
         }
 
         try {
@@ -39,20 +34,10 @@ class Authenticator
             return json_encode($jwt->data);
        }
        catch(ExpiredException $e) {
-            self::$responseMessage = [
-                'Status' => '400',
-                'Message' => "Your token has expired. Please login again."
-            ];
-
-            $app->halt(400, json_encode(self::$responseMessage));
+            OutputFormatter::formatOutput($app, 400, "Your token has expired. Please login again.");
        }
        catch(Exception $e) {
-            self::$responseMessage = [
-                'Status' => '400',
-                'Message' => 'Exception: '.$e->getMessage()
-            ];
-
-            $app->halt(400, json_encode(self::$responseMessage));
+            OutputFormatter::formatOutput($app, 400, 'Exception: '.$e->getMessage());
        }
     }
 
@@ -67,12 +52,7 @@ class Authenticator
         $app->response->headers->set('Content-Type', 'application/json');
 
         if(is_null($value) || empty($value)) {
-           self::$responseMessage = [
-                'Status' => '400',
-                'Message' => "Missing or invalid parameter: $param"
-            ];
-
-           $app->halt(400, json_encode(self::$responseMessage));
+           OutputFormatter::formatOutput($app, 400, "Missing or invalid parameter: $param");
         }
         else {
             return $value;
