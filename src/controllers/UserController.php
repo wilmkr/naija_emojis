@@ -34,11 +34,11 @@ class UserController
 
         if($result) {
             self::$responseMessage = [
-                'Status' => '400',
+                'Status' => '200',
                 'Message' => "The user '$user->username' already exists."
             ];
 
-            $app->halt(400, json_encode(self::$responseMessage));
+            $app->halt(200, json_encode(self::$responseMessage));
         }
 
         $rows = $user->save();

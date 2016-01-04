@@ -36,11 +36,11 @@ class EmojiController
 
         if($result) {
             self::$responseMessage = [
-                'Status' => '400',
+                'Status' => '200',
                 'Message' => "The emoji $emoji->emoji_char already exists."
             ];
 
-            $app->halt(400, json_encode(self::$responseMessage));
+            $app->halt(200, json_encode(self::$responseMessage));
         }
 
         $rows = $emoji->save();

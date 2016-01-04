@@ -4,6 +4,7 @@ namespace Wilson\tests;
 
 use GuzzleHttp\Client;
 use PHPUnit_Framework_TestCase;
+use GuzzleHttp\Exception\ClientException;
 
 class UserControllerTest extends PHPUnit_Framework_TestCase
 {
@@ -17,7 +18,7 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
 
         $response = $this->client->post('/auth/login', ['query' => ['username' => 'Wil', 'password' => 'password']]);
 
-        $this->token = json_decode($response->getBody());
+        $this->token = json_decode($response->getBody())->Token;
     }
 
     /**
@@ -34,7 +35,12 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
         ]);
 
         $expected = "User registration successful.";
-        $actual = json_decode($response->getBody());
+
+        if($response->getStatusCode() == 200){
+            $expected = "The user 'testuser' already exists.";
+        }
+
+        $actual = json_decode($response->getBody())->Message;
 
         $this->assertEquals($expected, $actual);
     }
@@ -46,7 +52,7 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
     {
         $response = $this->client->post('/auth/login', ['query' => ['username' => 'Wil', 'password' => 'password']]);
 
-        $this->assertInternalType('string', json_decode($response->getBody()));
+        $this->assertInternalType('string', json_decode($response->getBody())->Message);
         $this->assertEquals('200', $response->getStatusCode());
     }
 
@@ -58,8 +64,24 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
         $response = $this->client->get('/auth/logout', ['headers' => ['Authorization' => $this->token]]);
 
         $expected = "You've logged out successfully.";
-        $actual = json_decode($response->getBody());
+        $actual = json_decode($response->getBody())->Message;
 
         $this->assertEquals($expected, $actual);
     }
+
+    // public function testLogoutWithoutToken()
+    // {
+    //     $response = "";
+    //     try {
+    //         $response = $this->client->get('/auth/logout');
+
+    //         $expected = "You've logged out successfully.";
+    //         $actual = json_decode($response->getBody())->Message;
+
+    //         $this->assertEquals($expected, $actual);
+    //     }
+    //     catch(ClientException $ce) {
+
+    //     }
+    // }
 }
