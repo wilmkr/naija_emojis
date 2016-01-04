@@ -9,11 +9,10 @@ use Firebase\JWT\JWT;
 use Wilson\Source\Models\User;
 use Wilson\Source\Authenticator;
 use Wilson\Source\Configuration;
+use Wilson\Source\OutputFormatter;
 
 class UserController
 {
-    protected static $responseMessage = [];
-
     /**
      *  This function creates a new instance of a user
      * @param  Slim   $app
@@ -33,31 +32,16 @@ class UserController
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if($result) {
-            self::$responseMessage = [
-                'Status' => '200',
-                'Message' => "The user '$user->username' already exists."
-            ];
-
-            $app->halt(200, json_encode(self::$responseMessage));
+            OutputFormatter::formatOutput($app, 200, "The user '$user->username' already exists.");
         }
 
         $rows = $user->save();
 
         if($rows > 0) {
-            self::$responseMessage = [
-                'Status' => '201',
-                'Message' => 'User registration successful.'
-            ];
-
-            $app->halt(201, json_encode(self::$responseMessage));
+            OutputFormatter::formatOutput($app, 201, 'User registration successful.');
         }
         else {
-            self::$responseMessage = [
-                'Status' => '400',
-                'Message' => 'User registration failed!'
-            ];
-
-            $app->halt(400, json_encode(self::$responseMessage));
+            OutputFormatter::formatOutput($app, 400, 'User registration failed!');
         }
     }
 
@@ -94,21 +78,16 @@ class UserController
 
             $jwt = JWT::encode($token, $secretKey);
 
-            self::$responseMessage = [
+            $responseMessage = [
                 'Status' => '200',
                 'Message' => 'Login successful',
                 'Token' => $jwt
             ];
 
-            return json_encode(self::$responseMessage);
+            return json_encode($responseMessage);
         }
         else {
-            self::$responseMessage = [
-                'Status' => '404',
-                'Message' => 'Login failed. Username or password is invalid.'
-            ];
-
-            $app->halt(404, json_encode(self::$responseMessage));
+            OutputFormatter::formatOutput($app, 404, 'Login failed. Username or password is invalid.');
         }
     }
 
@@ -120,10 +99,6 @@ class UserController
     {
         Authenticator::authenticate($app);
 
-        self::$responseMessage = [
-            'Status' => '200',
-            'Message' => "You've logged out successfully."
-        ];
-        return json_encode(self::$responseMessage);
+        OutputFormatter::formatOutput($app, 200, "You've logged out successfully.");
     }
 }
