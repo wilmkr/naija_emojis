@@ -69,6 +69,9 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test logout functionality without an authorization token
+     */
     public function testLogoutWithoutToken()
     {
         $clientExceptionThrown = true;

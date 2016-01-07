@@ -47,22 +47,38 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if an emoji can actually be created. The created emoji is used for the other tests as well.
+     * This method is used to create a test emoji in the database
+     * @param  $auth [authorization token]
+     */
+    public function createEmoji($auth)
+    {
+        try {
+            $response = $this->client->post('/emoji', [
+                'form_params' => [
+                    'name' => 'test_emoji',
+                    'emoji_char' => '👨',
+                    'category' => 'Facial',
+                    'keywords' => 'shocked, open-mouthed, startle',
+                    'created_by' => 'Gayle Smith'
+                ],
+                'headers' => [
+                   'Authorization' => $auth
+                ]
+            ]);
+
+            return $response;
+        }
+        catch(ClientException $ce) {
+           return true;
+        }
+    }
+
+    /**
+     * This method tests if an emoji can actually be created with a token
      */
     public function testCreateEmoji()
     {
-        $response = $this->client->post('/emoji', [
-            'form_params' => [
-                'name' => 'test_emoji',
-                'emoji_char' => '👨',
-                'category' => 'Facial',
-                'keywords' => 'shocked, open-mouthed, startle',
-                'created_by' => 'Gayle Smith'
-            ],
-            'headers' => [
-               'Authorization' => $this->token
-            ]
-        ]);
+        $response = $this->createEmoji($this->token);
 
         $expected = '201';
 
@@ -71,6 +87,15 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals($expected, $response->getStatusCode());
+    }
+
+    /**
+     * This method tests if an exception will be thrown if a user tries to create an emoji
+     * without a token
+     */
+    public function testCreateEmojiWithoutAuthorization()
+    {
+        $this->assertTrue($this->createEmoji(''));
     }
 
     /**
@@ -99,25 +124,41 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if an emoji can be fully updated
+     * This method is used to update the test emoji
+     * @param  $auth
      */
-    public function testUpdateEmoji()
+    public function updateEmoji($auth)
     {
        $id = self::getEmojiID();
 
-        $response = $this->client->put("/emoji/$id", [
-            'form_params' => [
-                //'name' => str_shuffle('ThisIsARandomString'),
-                'name' => 'test_emoji',
-                'emoji_char' => '😇',
-                'category' => 'Facial',
-                'keywords' => 'shocked, open-mouthed, startle',
-                'created_by' => 'Gayle Smith'
-            ],
-            'headers' => [
-               'Authorization' => $this->token
-            ]
-        ]);
+        try {
+            $response = $this->client->put("/emoji/$id", [
+                'form_params' => [
+                    //'name' => str_shuffle('ThisIsARandomString'),
+                    'name' => 'test_emoji',
+                    'emoji_char' => '👨',
+                    'category' => 'Facial',
+                    'keywords' => 'shocked, open-mouthed, startle',
+                    'created_by' => 'Gayle Smith'
+                ],
+                'headers' => [
+                   'Authorization' => $auth
+                ]
+            ]);
+
+            return $response;
+        }
+        catch(ClientException $ce) {
+            return true;
+        }
+    }
+
+    /**
+     * This method tests that an emoji can be updates with a token
+     */
+    public function testupdateEmoji()
+    {
+        $response = $this->updateEmoji($this->token);
 
         $expected = "Emoji successfully updated.";
         $actual = json_decode($response->getBody())->Message;
@@ -127,21 +168,57 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *  Test if an emoji can be deleted
+     * This method tests if an exception will be thrown if a user tries to update an emoji
+     * without a token
+     */
+    public function testupdateEmojiWithoutAuthorization()
+    {
+        $this->assertTrue($this->updateEmoji(''));
+    }
+
+    /**
+     * This method is used to delete the test token from the database
+     * @param  $auth
+     */
+    public function deleteEmoji($auth)
+    {
+        $id = self::getEmojiID();
+
+        try {
+            $response = $this->client->delete("/emoji/$id", [
+                'headers' => [
+                   'Authorization' => $auth
+                ]
+            ]);
+
+            return $response;
+        }
+        catch(ClientException $ce) {
+            return true;
+        }
+    }
+
+    /**
+     * This method tests that an emoji can be deleted with a token
      */
     public function testDeleteEmoji()
     {
         $id = self::getEmojiID();
 
-        $response = $this->client->delete("/emoji/$id", [
-            'headers' => [
-               'Authorization' => $this->token
-            ]
-        ]);
+        $response = $this->deleteEmoji($this->token);
 
         $expected = "Emoji with ID $id deleted successfully.";
         $actual = json_decode($response->getBody())->Message;
 
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * This method tests if an exception will be thrown if a user tries to delete an emoji
+     * without a token
+     */
+    public function testDeleteEmojiWithoutAuthorization()
+    {
+        $this->assertTrue($this->deleteEmoji(''));
     }
 }
