@@ -69,19 +69,17 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    // public function testLogoutWithoutToken()
-    // {
-    //     $response = "";
-    //     try {
-    //         $response = $this->client->get('/auth/logout');
+    public function testLogoutWithoutToken()
+    {
+        $clientExceptionThrown = true;
 
-    //         $expected = "You've logged out successfully.";
-    //         $actual = json_decode($response->getBody())->Message;
+        try {
+            $response = $this->client->get('/auth/logout');
 
-    //         $this->assertEquals($expected, $actual);
-    //     }
-    //     catch(ClientException $ce) {
-
-    //     }
-    // }
+            $clientExceptionThrown = false;
+        }
+        catch(ClientException $ce) {
+            $this->assertTrue($clientExceptionThrown);
+        }
+    }
 }

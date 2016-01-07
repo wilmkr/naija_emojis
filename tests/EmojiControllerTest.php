@@ -2,13 +2,16 @@
 
 namespace Wilson\tests;
 
+use PDO;
+use Dotenv\Dotenv;
 use GuzzleHttp\Client;
 use PHPUnit_Framework_TestCase;
+use GuzzleHttp\Exception\ClientException;
 
 class EmojiControllerTest extends PHPUnit_Framework_TestCase
 {
-    protected $client;
     protected $token;
+    protected $client;
 
     public function setup()
     {
@@ -21,14 +24,37 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if an emoji can actually be created
+     * This method retrieves the id of the test emoji created. All tests make use of the test emoji created.
+     */
+    public function getEmojiID()
+    {
+        if (! getenv('APP_ENV') || getenv('APP_ENV')=="local") {
+            $dotenv = new Dotenv(__DIR__ . '/../');
+            $dotenv->load();
+        }
+
+        $host = getenv('DB_HOST');
+        $db = getenv('DB_NAME');
+        $username = getenv('DB_USERNAME');
+        $password = getenv('DB_PASSWORD');
+        $driver = getenv('DB_DRIVER');
+
+        $conn = new PDO($driver.':host='.$host.';dbname='.$db, $username, $password);
+        $stmt = $conn->query("SELECT * FROM emojis WHERE name='test_emoji'");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result['id'];
+    }
+
+    /**
+     * Test if an emoji can actually be created. The created emoji is used for the other tests as well.
      */
     public function testCreateEmoji()
     {
         $response = $this->client->post('/emoji', [
             'form_params' => [
-                'name' => 'Surprise',
-                'emoji_char' => '😀',
+                'name' => 'test_emoji',
+                'emoji_char' => '👨',
                 'category' => 'Facial',
                 'keywords' => 'shocked, open-mouthed, startle',
                 'created_by' => 'Gayle Smith'
@@ -63,7 +89,9 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testFindEmoji()
     {
-        $response = $this->client->get('/emoji/1');
+        $id = self::getEmojiID();
+
+        $response = $this->client->get("/emoji/$id");
 
         $this->assertObjectHasAttribute('name', json_decode($response->getBody()));
         $this->assertObjectHasAttribute('emoji_char', json_decode($response->getBody()));
@@ -75,9 +103,12 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateEmoji()
     {
-        $response = $this->client->put('/emoji/1', [
+       $id = self::getEmojiID();
+
+        $response = $this->client->put("/emoji/$id", [
             'form_params' => [
-                'name' => str_shuffle('ThisIsARandomString'),
+                //'name' => str_shuffle('ThisIsARandomString'),
+                'name' => 'test_emoji',
                 'emoji_char' => '😇',
                 'category' => 'Facial',
                 'keywords' => 'shocked, open-mouthed, startle',
@@ -89,7 +120,7 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
         ]);
 
         $expected = "Emoji successfully updated.";
-        $actual = json_decode($response->getBody());
+        $actual = json_decode($response->getBody())->Message;
 
         $this->assertEquals($expected, $actual);
         $this->assertEquals('200', $response->getStatusCode());
@@ -100,15 +131,16 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteEmoji()
     {
-        $position = '1';
-        $response = $this->client->delete('/emoji/'.$position, [
+        $id = self::getEmojiID();
+
+        $response = $this->client->delete("/emoji/$id", [
             'headers' => [
                'Authorization' => $this->token
             ]
         ]);
 
-        $expected = "Emoji $position deleted successfully.";
-        $actual = json_decode($response->getBody());
+        $expected = "Emoji with ID $id deleted successfully.";
+        $actual = json_decode($response->getBody())->Message;
 
         $this->assertEquals($expected, $actual);
     }
