@@ -17,18 +17,6 @@ matrix:
     - php: 7.0
     - php: hhvm
 
-env:
- global:
-   - setup=basic
-   - APP_ENV=production
-   - APP_DEBUG=true
-   - DB_DATABASE=cp3
-   - DB_HOST=localhost
-   - DB_USERNAME=homestead
-   - DB_PASSWORD=secret
-   - DRIVER=mysql
-   - JWT-KEY=12345
-
 before_script:
   - travis_retry composer self-update
   - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-source
