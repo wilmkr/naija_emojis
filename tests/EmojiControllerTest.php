@@ -15,8 +15,7 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        //$this->client = new Client(['base_uri' => 'https://w-naija-emoji.herokuapp.com']);
-        $this->client = new Client(['base_uri' => 'http://checkpoint3.app']);
+        $this->client = new Client(['base_uri' => 'https://w-naija-emoji.herokuapp.com']);
 
         $response = $this->client->post('/auth/login', ['query' => ['username' => 'Wil', 'password' => 'password']]);
 
