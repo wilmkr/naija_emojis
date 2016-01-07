@@ -23,7 +23,7 @@ class EmojiControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * This method retrieves the id of the test emoji created. All tests make use of the test emoji created.
+     * This method retrieves the id of the test emoji created. All the tests make use of the test emoji created.
      */
     public function getEmojiID()
     {
