@@ -87,7 +87,7 @@ class UserController
             return json_encode($responseMessage);
         }
         else {
-            OutputFormatter::formatOutput($app, 404, 'Login failed. Username or password is invalid.');
+            OutputFormatter::formatOutput($app, 401, 'Login failed. Username or password is invalid.');
         }
     }
 
