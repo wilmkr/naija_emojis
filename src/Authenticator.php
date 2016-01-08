@@ -50,7 +50,7 @@ class Authenticator
         $app->response->headers->set('Content-Type', 'application/json');
 
         if(is_null($value) || empty($value)) {
-           OutputFormatter::formatOutput($app, 400, "Missing or invalid parameter: $param");
+           OutputFormatter::formatOutput($app, 400, "Missing or invalid parameter value for: $param");
         }
         else {
             return $value;
