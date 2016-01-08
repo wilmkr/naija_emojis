@@ -137,7 +137,7 @@ response
 - Fully update an Emoji
 
 ```
-Send a PUT request containing the Emoji's position in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
+Send a PUT request containing the Emoji's ID in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
 
 E.g. to fully update the first emoji:
 
