@@ -34,7 +34,7 @@ class EmojiController
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if($result) {
-            OutputFormatter::formatOutput($app, 304, "The emoji $emoji->emoji_char already exists.");
+            OutputFormatter::formatOutput($app, 200, "The emoji $emoji->emoji_char already exists.");
         }
 
         $rows = $emoji->save();
