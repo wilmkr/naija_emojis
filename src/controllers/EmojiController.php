@@ -147,17 +147,20 @@ class EmojiController
         }
 
         $params = $app->request->patch();
+        if (count($params) == 0) {
+            OutputFormatter::formatOutput($app, 406, "The field to update was not specified.");
+        }
 
         foreach ($params as $key => $value) {
+            Authenticator::checkParamValue($app, $key, $value);
             $emoji->$key = $value;
         }
 
         $rows = $emoji->save();
 
-        if($rows > 0) {
+        if ($rows > 0) {
             OutputFormatter::formatOutput($app, 200, 'Emoji successfully updated.');
-        }
-        else {
+        } else {
             OutputFormatter::formatOutput($app, 400, 'Emoji partial update failed!');
         }
     }
