@@ -100,7 +100,7 @@ Response should contain all emojis in JSON format.
 - Get a particular Emoji
 
 ```
-Send a GET request containing the Emoji's position in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
+Send a GET request containing the Emoji's ID in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
 
 E.g. to get the third emoji:
 
@@ -112,7 +112,7 @@ Response should contain the emoji in JSON format.
 - Partialy update an Emoji
 
 ```
-Send a PATCH request containing the Emoji's position in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
+Send a PATCH request containing the Emoji's ID in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
 
 E.g. to update just the name of the first emoji:
 
@@ -166,7 +166,7 @@ response
 - Delete a particular Emoji
 
 ```
-Send a DELETE request containing the Emoji's position in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
+Send a DELETE request containing the Emoji's ID in the emojis table to https://w-naija-emoji.herokuapp.com/emojis
 
 E.g. to DELETE the third emoji:
 
