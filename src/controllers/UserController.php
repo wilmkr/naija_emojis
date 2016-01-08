@@ -27,6 +27,8 @@ class UserController
         $user->password = Authenticator::checkParamValue($app, "password", $app->request->params('password'));
         $user->name = Authenticator::checkParamValue($app, "name", $app->request->params('name'));
 
+        $user->password = md5($user->password);
+
         $conn = User::getConnection();
         $stmt = $conn->query("SELECT * FROM users WHERE username='$user->username'");
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -55,7 +57,7 @@ class UserController
         $app->response->headers->set('Content-Type', 'application/json');
 
         $username = $app->request->params('username');
-        $password = $app->request->params('password');
+        $password = md5($app->request->params('password'));
 
         $conn = User::getConnection();
         $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
