@@ -27,7 +27,7 @@ class UserController
         $user->password = Authenticator::checkParamValue($app, "password", $app->request->params('password'));
         $user->name = Authenticator::checkParamValue($app, "name", $app->request->params('name'));
 
-        $user->password = md5($user->password);
+        $user->password = password_hash($user->password, PASSWORD_DEFAULT);
 
         $conn = User::getConnection();
         $stmt = $conn->query("SELECT * FROM users WHERE username='$user->username'");
@@ -57,14 +57,14 @@ class UserController
         $app->response->headers->set('Content-Type', 'application/json');
 
         $username = $app->request->params('username');
-        $password = md5($app->request->params('password'));
+        $password = $app->request->params('password');
 
         $conn = User::getConnection();
-        $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+        $sql = "SELECT * FROM users WHERE username='$username'";
         $stmt = $conn->query($sql);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if($result)
+        if(password_verify($password, $result['password']))
         {
             $token = [
                 'iat'  => time(),
